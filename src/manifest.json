@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "ProTrackr",
+  "version": "1.0.0",
+  "description": "A powerful productivity tracking and website blocking tool",
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "alarms"
+  ],
+  "optional_permissions": [
+    "webNavigation",
+    "notifications"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.svg",
+      "32": "assets/icons/icon32.svg",
+      "48": "assets/icons/icon48.svg",
+      "128": "assets/icons/icon128.svg"
+    }
+  },
+  "icons": {
+    "16": "assets/icons/icon16.svg",
+    "32": "assets/icons/icon32.svg",
+    "48": "assets/icons/icon48.svg",
+    "128": "assets/icons/icon128.svg"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/activity-monitor.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["block-page/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
