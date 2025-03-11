@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProTrackr</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>ProTrackr</h1>
+      <div class="productivity-score">
+        <span class="score-label">Today's Score</span>
+        <span class="score-value" id="productivityScore">--</span>
+      </div>
+    </header>
+
+    <section class="today-summary">
+      <h2>Today's Activity</h2>
+      <div class="time-summary">
+        <div class="total-time">
+          <span class="label">Total Time</span>
+          <span class="value" id="totalTime">--:--:--</span>
+        </div>
+        <div class="active-time">
+          <span class="label">Active Time</span>
+          <span class="value" id="activeTime">--:--:--</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="top-sites">
+      <h2>Most Visited</h2>
+      <div class="sites-list" id="topSites">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <section class="quick-actions">
+      <button id="blockSite" class="action-button">Block Current Site</button>
+      <button id="viewDashboard" class="action-button secondary">Open Dashboard</button>
+    </section>
+  </div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
