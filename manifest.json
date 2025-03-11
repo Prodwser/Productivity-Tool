@@ -40,7 +40,11 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["block-page/*"],
+      "resources": [
+        "core/*.js",
+        "dashboard/*",
+        "block-page/*"
+      ],
       "matches": ["<all_urls>"]
     }
   ]
