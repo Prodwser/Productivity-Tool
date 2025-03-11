@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProTrackr Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="app">
+    <header class="main-header">
+      <div class="header-content">
+        <h1>ProTrackr Dashboard</h1>
+        <div class="date-range">
+          <button id="todayBtn" class="date-btn active">Today</button>
+          <button id="weekBtn" class="date-btn">This Week</button>
+          <button id="monthBtn" class="date-btn">This Month</button>
+          <button id="customBtn" class="date-btn">Custom</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+      <div class="stats-overview">
+        <div class="stat-card">
+          <h3>Productivity Score</h3>
+          <div class="score" id="productivityScore">--</div>
+          <div class="trend positive">↑ 5% from last period</div>
+        </div>
+        <div class="stat-card">
+          <h3>Total Time</h3>
+          <div class="time" id="totalTime">--:--:--</div>
+          <div class="subtitle">Across all sites</div>
+        </div>
+        <div class="stat-card">
+          <h3>Active Time</h3>
+          <div class="time" id="activeTime">--:--:--</div>
+          <div class="subtitle">Excluding idle time</div>
+        </div>
+        <div class="stat-card">
+          <h3>Sites Visited</h3>
+          <div class="count" id="sitesCount">--</div>
+          <div class="subtitle">Unique domains</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-container">
+          <h2>Time Distribution</h2>
+          <div class="chart" id="timeDistribution"></div>
+        </div>
+        <div class="chart-container">
+          <h2>Category Breakdown</h2>
+          <div class="chart" id="categoryBreakdown"></div>
+        </div>
+        <div class="chart-container full-width">
+          <h2>Activity Timeline</h2>
+          <div class="chart" id="activityTimeline"></div>
+        </div>
+      </div>
+
+      <div class="details-section">
+        <div class="sites-list">
+          <h2>Top Sites</h2>
+          <div class="list-container" id="topSites">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+        <div class="categories-list">
+          <h2>Categories</h2>
+          <div class="list-container" id="categories">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="dashboard-footer">
+      <div class="settings-link">
+        <button id="openSettings">Settings</button>
+      </div>
+      <div class="export-link">
+        <button id="exportData">Export Data</button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="dashboard.js"></script>
+</body>
+</html>
