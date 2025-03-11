@@ -13,6 +13,13 @@ let currentState = {
   isActive: false
 };
 
+// Alarm names
+const ALARMS = {
+  MAINTENANCE: 'maintenance',
+  STATS_UPDATE: 'statsUpdate',
+  IDLE_CHECK: 'idleCheck'
+};
+
 /**
  * Extract domain from URL
  * @param {string} url 
@@ -50,6 +57,12 @@ async function handleTabActivated(tabId, windowId) {
         domain: extractDomain(tab.url),
         isActive: true
       };
+
+      // Notify popup of state change
+      chrome.runtime.sendMessage({
+        type: 'stateUpdated',
+        data: currentState
+      }).catch(() => {}); // Ignore if popup is closed
     }
   } catch (e) {
     console.error('Error handling tab activation:', e);
@@ -83,6 +96,11 @@ async function endTracking() {
         title: (await chrome.tabs.get(currentState.tabId)).title
       });
     }
+
+    // Notify popup of updated stats
+    chrome.runtime.sendMessage({
+      type: 'statsUpdated'
+    }).catch(() => {}); // Ignore if popup is closed
   } catch (e) {
     console.error('Error ending tracking session:', e);
   }
@@ -96,9 +114,45 @@ async function endTracking() {
  * @returns {Promise<string>}
  */
 async function detectCategory(domain) {
-  // TODO: Implement sophisticated category detection
-  // For now, return a placeholder category
-  return 'uncategorized';
+  const categories = await storage.getLocal(StorageKeys.CATEGORIES) || {};
+  return categories[domain] || 'uncategorized';
+}
+
+/**
+ * Handle alarm events
+ * @param {chrome.alarms.Alarm} alarm 
+ */
+async function handleAlarm(alarm) {
+  switch (alarm.name) {
+    case ALARMS.MAINTENANCE:
+      await storage.performMaintenance();
+      break;
+    
+    case ALARMS.STATS_UPDATE:
+      if (currentState.isActive) {
+        const duration = Date.now() - currentState.startTime;
+        await storage.updateDailySummary({
+          time: duration,
+          domain: currentState.domain,
+          category: await detectCategory(currentState.domain)
+        });
+      }
+      break;
+    
+    case ALARMS.IDLE_CHECK:
+      // Check if current tab is still valid
+      if (currentState.isActive && currentState.tabId) {
+        try {
+          const tab = await chrome.tabs.get(currentState.tabId);
+          if (!tab || tab.url !== currentState.url) {
+            await endTracking();
+          }
+        } catch {
+          await endTracking();
+        }
+      }
+      break;
+  }
 }
 
 /**
@@ -108,9 +162,17 @@ async function initialize() {
   // Initialize storage
   await storage.initialize();
 
-  // Set up maintenance alarm
-  chrome.alarms.create('maintenance', {
+  // Set up alarms
+  chrome.alarms.create(ALARMS.MAINTENANCE, {
     periodInMinutes: 60 * 24 // Once per day
+  });
+
+  chrome.alarms.create(ALARMS.STATS_UPDATE, {
+    periodInMinutes: 5 // Every 5 minutes
+  });
+
+  chrome.alarms.create(ALARMS.IDLE_CHECK, {
+    periodInMinutes: 1 // Every minute
   });
 
   // Listen for tab activation
@@ -145,14 +207,14 @@ async function initialize() {
     }
   );
 
-  // Listen for maintenance alarm
-  chrome.alarms.onAlarm.addListener(
-    async (alarm) => {
-      if (alarm.name === 'maintenance') {
-        await storage.performMaintenance();
-      }
-    }
-  );
+  // Listen for alarms
+  chrome.alarms.onAlarm.addListener(handleAlarm);
+
+  // Initial tab check
+  const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (activeTab) {
+    await handleTabActivated(activeTab.id, activeTab.windowId);
+  }
 }
 
 // Initialize when service worker starts
