@@ -10,8 +10,7 @@
     "alarms"
   ],
   "optional_permissions": [
-    "webNavigation",
-    "notifications"
+    "webNavigation"
   ],
   "background": {
     "service_worker": "background/service-worker.js",
