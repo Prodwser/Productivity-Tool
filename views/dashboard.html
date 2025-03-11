@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Productivity Dashboard</h1>
+            <div class="date-selector">
+                <button id="prevDay">←</button>
+                <span id="currentDate"></span>
+                <button id="nextDay">→</button>
+            </div>
+        </header>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <h3>Productivity Score</h3>
+                <div class="score" id="productivityScore">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Time</h3>
+                <div id="totalTime">00:00:00</div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Time</h3>
+                <div id="activeTime">00:00:00</div>
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3>Time Distribution</h3>
+                <canvas id="timeDistributionChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Category Breakdown</h3>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+
+        <div class="sites-list">
+            <h3>Top Sites</h3>
+            <div id="topSites"></div>
+        </div>
+    </div>
+    <script src="dashboard.js" type="module"></script>
+</body>
+</html>
