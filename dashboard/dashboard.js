@@ -1,6 +1,13 @@
 // dashboard.js
 
-import { storage, StorageKeys } from '../core/storage.js';
+// Storage keys enum
+const StorageKeys = {
+  DAILY_SUMMARY: 'daily_summary',
+  SETTINGS: 'settings',
+  BLOCK_RULES: 'block_rules',
+  CATEGORIES: 'categories',
+  LAST_SYNC: 'last_sync'
+};
 
 // Chart instances
 let timeDistributionChart = null;
@@ -218,7 +225,13 @@ function updateTopSites(data) {
  */
 async function updateDashboard() {
   try {
-    const summaries = await storage.getLocal(StorageKeys.DAILY_SUMMARY) || {};
+    // Get data from Chrome storage
+    const summaries = await new Promise((resolve) => {
+      chrome.storage.local.get(StorageKeys.DAILY_SUMMARY, (result) => {
+        resolve(result[StorageKeys.DAILY_SUMMARY] || {});
+      });
+    });
+
     const today = new Date().toISOString().split('T')[0];
     const todaySummary = summaries[today] || {
       totalTime: 0,
